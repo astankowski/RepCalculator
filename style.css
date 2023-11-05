@@ -1,0 +1,21 @@
+body {
+    background-color: rgb(17, 17, 17);
+    color: rgb(250, 250, 250);
+    margin: 0;
+    padding: 0;
+}
+
+#flexbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+tr, td {
+    padding: 2%;
+    margin: 2%;
+}
+input {
+    width: fit-content;
+}
