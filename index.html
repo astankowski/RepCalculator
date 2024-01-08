@@ -1,93 +1,82 @@
 <!DOCTYPE html>
-<html>
-  <script src="js/jquery-3.6.1.min.js"></script>
-  <link rel="stylesheet" href="style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-<head>
-</head>
-<body>
-  <div id="flexbox">
-    <h1>Rep Calculator</h1>
-    <div class="rm-calculator">
-      <div class="input">
-        <div class="weight"><input class="weight large auto-focus auto-select" type="number" name="weight" value="10"
-            step="1"><select name="unit" class="offwhite unit">
-            <option value="kg">kg</option>
-            <option value="lbs">lbs</option>
-          </select></div>x<div class="reps"><input class="reps large auto-select" type="number" name="reps" value="10"
-            step="1"><label for="reps">reps</label></div>
+<html lang="en">
+  <head>
+    <script src="js/jquery-3.6.1.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Rep Calculator</title>
+  </head>
+  <body>
+  <div class="rm-calculator">
+    <div id="header">Rep Calculator</div>
+    <div class="line-break"></div>
+      <div class="inputs">
+        <label for="weight">Weight</label>
+        <input name="weight" id="weight" step="2.5" type="number" value="10" min="2.5">
+        <label for="unit">Unit</label>
+        <select name="unit" id="unit">
+          <option value="kg">kg</option>
+          <option value="lbs">lbs</option>
+        </select>
+        <label for="reps">reps</label>
+        <input type="number" name="reps" id="reps" value="10" step="1" min="1">
+        <label for="formula">Formula</label>
+        <select id="formula" name="formula">
+          <option value="brzycki">Brzycki formula</option>
+          <option value="epley">Epley formula</option>
+        </select>
       </div>
-      <div class="result success">
-        <div><select name="formula" class="large green">
-            <option class="large" value="brzycki">Brzycki formula</option>
-            <option class="large" value="epley">Epley formula</option>
-          </select></div>
-        <table>
-        </table>
-      </div>
+      <table>
+      </table>
     </div>
-  </div>
-  <script async defer>
-    function typing(e) {
-      e.target.setAttribute('size', e.target.value.length);
-    }
-    
-    const myInput = document.querySelector('input');
-    myInput.addEventListener('input', this.typing);
-    
+  <script>
+      function typing(e) {
+        e.target.setAttribute('size', e.target.value.length);
+      }
 
+      const myInput = document.querySelector('input');
+      myInput.addEventListener('input', typing);
 
-    function commafy(number) {
-      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-    function round(number, decimalPlaces) {
-      var factor = Math.pow(10, decimalPlaces);
-      return Math.round(number * factor) / factor;
-    }
-    var $rmCalculator = $('div.rm-calculator');
-    if ($rmCalculator.length) {
-      var moreResults;
-      var $weight = $rmCalculator.find('input[name=weight]');
-      var $reps = $rmCalculator.find('input[name=reps]');
-      var $unit = $rmCalculator.find('select[name=unit]');
-      var $formula = $rmCalculator.find('select[name=formula]');
-      var $type = $rmCalculator.find('select[name=type]');
-      var $table = $rmCalculator.find('table');
-      updateRm();
-      $weight.on('keyup change', updateRm);
-      $reps.on('keyup change', updateRm);
-      $unit.on('change', updateRm);
-      $formula.on('change', updateRm);
-      $type.on('change', updateRm);
-      $rmCalculator.find('#rm-calculator-more-results').on('click', function () {
-        $(this).remove();
-        moreResults = true;
+      function commafy(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+      function round(number, decimalPlaces) {
+        const factor = Math.pow(10, decimalPlaces);
+        return Math.round(number * factor) / factor;
+      }
+
+      const $rmCalculator = $('div.rm-calculator');
+      if ($rmCalculator.length) {
+        const $weight = $rmCalculator.find('input[name=weight]');
+        const $reps = $rmCalculator.find('input[name=reps]');
+        const $unit = $rmCalculator.find('select[name=unit]');
+        const $formula = $rmCalculator.find('select[name=formula]');
+        const $type = $rmCalculator.find('select[name=type]');
+        const $table = $rmCalculator.find('table');
         updateRm();
-      });
-      function updateRm() {
-        var weight = parseFloat($weight.val().toString().replace(',', '.'));
-        var reps = parseFloat($reps.val().toString().replace(',', '.'));
-        var invalid = [weight, reps].filter(x => !x || isNaN(x) || x < 0).length;
-        var unit = $unit.val();
-        var formula = $formula.val();
-        var type = $type.val();
+        $weight.on('keyup change', updateRm);
+        $reps.on('keyup change', updateRm);
+        $unit.on('change', updateRm);
+        $formula.on('change', updateRm);
+        $type.on('change', updateRm);
+
+        function updateRm() {
+          const weight = parseFloat($weight.val().toString().replace(',', '.'));
+          const reps = parseFloat($reps.val().toString().replace(',', '.'));
+          const invalid = [weight, reps].filter(x => !x || isNaN(x) || x < 0).length;
+          const unit = $unit.val();
+          const formula = $formula.val();
           $table.html(([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]).map(rm => {
-            return '<tr>'
-              + '<td>' + rm + 'RM</td>'
-              + '<td>=</td>'
-              + '<td><input type="text" value="' + (invalid ? '-' : commafy(round(calcXRm(rm), 1)) + ' ' + unit) + '" tabindex="-1" readonly="true"></td>'
-              + '</tr>';
-          }).join(''));
-        function calcXRm(rm) {
-          if (formula == 'epley') {
-            return weight * (1 + (reps / 30)) / (1 + (rm / 30));
-          } else {
-            return weight / (1.0278 - .0278 * reps) * (1.0278 - .0278 * rm);
+              return `<tr><td>${rm}RM</td><td>=</td><td>${invalid ? '-' : commafy(round(calcXRm(rm), 1)) + ' ' + unit}</td></tr>`;
+            }).join(''));
+          function calcXRm(rm) {
+            if (formula === 'epley') {
+              return weight * (1 + (reps / 30)) / (1 + (rm / 30));
+            } else {
+              return weight / (1.0278 - .0278 * reps) * (1.0278 - .0278 * rm);
+            }
           }
         }
       }
-    }
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>

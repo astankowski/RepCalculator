@@ -1,21 +1,44 @@
 body {
-    background-color: rgb(17, 17, 17);
-    color: rgb(250, 250, 250);
-    margin: 0;
-    padding: 0;
+    margin: 3rem;
+    font-size: 1.5em;
+    background-color: #222222;
+    font-family: Arial, serif;
+    color: white;
 }
 
-#flexbox {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.rm-calculator {
+    background-color: #FF5050;
+}
+
+input, select, option, label, button, input:focus {
+    font-size: inherit;
+    font-family: inherit;
+    border: 0;
     text-align: center;
+    outline: 0;
 }
 
-tr, td {
-    padding: 2%;
-    margin: 2%;
+.rm-calculator, select, option, input {
+    border-radius: 0.2rem;
 }
-input {
-    width: fit-content;
+
+.inputs {
+    display: flex;
+    flex-flow: column;
+}
+
+#result {
+    height: 1em;
+    width: 100%;
+    border-radius: 0.2em;
+    margin: 0;
+    padding: 0.2em;
+    text-align: right;
+    background-color: #4CAF50;
+    color: white;
+}
+
+.line-break {
+    flex-basis: 100%;
+    height: 0;
 }
