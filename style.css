@@ -16,7 +16,7 @@ body {
     font-weight: bold;
 }
 
-input, select, option, label, button, input:focus, #results, option, .rm-calculator, .result {
+input, select, option, label, button, input:focus, #results, option, .rm-calculator, .result, span {
     font-size: inherit;
     font-family: inherit;
     border: 0;
