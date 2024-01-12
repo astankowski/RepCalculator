@@ -8,7 +8,6 @@
   <body>
   <div class="rm-calculator">
     <div id="header">Rep Calculator</div>
-    <div class="line-break"></div>
       <div class="inputs">
         <label for="weight">Weight</label>
         <input name="weight" id="weight" step="2.5" type="number" value="10" min="2.5">
@@ -24,11 +23,26 @@
           <option value="epley">Epley formula</option>
           <option value="brzycki">Brzycki formula</option>
         </select>
-        <label for="results">Results</label>
-        <div id="results"></div>
       </div>
-    </div>
+    <label for="results">Results</label>
+    <div id="results"></div>
+  </div>
   <script>
+    const myInput = document.querySelector('input');
+    myInput.addEventListener('input', typing);
+    const $rmCalculator = $('div.rm-calculator');
+    if ($rmCalculator.length) {
+      var $weight = $rmCalculator.find('input[name=weight]');
+      var $reps = $rmCalculator.find('input[name=reps]');
+      var $unit = $rmCalculator.find('select[name=unit]');
+      var $formula = $rmCalculator.find('select[name=formula]');
+      var $results = $rmCalculator.find('div[id=results]');
+      updateRm();
+      $weight.on('keyup change', updateRm);
+      $reps.on('keyup change', updateRm);
+      $unit.on('change', updateRm);
+      $formula.on('change', updateRm);
+    }
     function updateRm() {
       const weight = parseFloat($weight.val().toString().replace(',', '.'));
       const reps = parseFloat($reps.val().toString().replace(',', '.'));
@@ -36,7 +50,7 @@
       const unit = $unit.val();
       const formula = $formula.val();
       $results.html(([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]).map(rm => {
-        return `<div class="result">${rm}RM ${invalid ? '-' : commafy(round(calcXRm(rm), 1)) + ' ' + unit}</div>`;
+        return `<div class="result">${rm}RM = ${invalid ? '-' : commafy(round(calcXRm(rm), 1)) + ' ' + unit}</div>`;
       }).join(''));
       function calcXRm(rm) {
         if (formula === 'epley') {
@@ -49,27 +63,12 @@
     function typing(e) {
         e.target.setAttribute('size', e.target.value.length);
       }
-      function commafy(number) {
+    function commafy(number) {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
-      function round(number, decimalPlaces) {
+    function round(number, decimalPlaces) {
         const factor = Math.pow(10, decimalPlaces);
         return Math.round(number * factor) / factor;
-      }
-      const myInput = document.querySelector('input');
-      myInput.addEventListener('input', typing);
-      const $rmCalculator = $('div.rm-calculator');
-      if ($rmCalculator.length) {
-        var $weight = $rmCalculator.find('input[name=weight]');
-        var $reps = $rmCalculator.find('input[name=reps]');
-        var $unit = $rmCalculator.find('select[name=unit]');
-        var $formula = $rmCalculator.find('select[name=formula]');
-        var $results = $rmCalculator.find('div[id=results]');
-        updateRm();
-        $weight.on('keyup change', updateRm);
-        $reps.on('keyup change', updateRm);
-        $unit.on('change', updateRm);
-        $formula.on('change', updateRm);
       }
   </script>
   </body>
