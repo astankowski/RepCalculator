@@ -1,6 +1,6 @@
 body {
     margin: 3rem;
-    font-size: 1.5em;
+    font-size: 3em;
     background-color: #222222;
     font-family: Arial, serif;
     color: white;
@@ -8,37 +8,46 @@ body {
 
 .rm-calculator {
     background-color: #FF5050;
+    padding: 1em;
 }
 
-input, select, option, label, button, input:focus {
+#header {
+    font-size: 5rem;
+    font-weight: bold;
+}
+
+input, select, option, label, button, input:focus, #results, option, .rm-calculator, .result {
     font-size: inherit;
     font-family: inherit;
     border: 0;
     text-align: center;
     outline: 0;
+    border-radius: 0.5rem;
 }
 
-.rm-calculator, select, option, input {
-    border-radius: 0.2rem;
-}
-
-.inputs {
+.inputs, #results {
     display: flex;
     flex-flow: column;
-}
-
-#result {
-    height: 1em;
-    width: 100%;
-    border-radius: 0.2em;
-    margin: 0;
-    padding: 0.2em;
-    text-align: right;
-    background-color: #4CAF50;
-    color: white;
+    gap: 1rem;
 }
 
 .line-break {
     flex-basis: 100%;
     height: 0;
 }
+
+.result, #results {
+    background-color: white;
+    color: black;
+}
+
+
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    opacity: 1;
+    margin-left: -14px;
+}
+
+
+select { text-indent: 1rem; }

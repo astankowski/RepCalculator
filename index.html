@@ -17,25 +17,38 @@
           <option value="kg">kg</option>
           <option value="lbs">lbs</option>
         </select>
-        <label for="reps">reps</label>
-        <input type="number" name="reps" id="reps" value="10" step="1" min="1">
+        <label for="reps">Reps</label>
+        <input type="number" name="reps" id="reps" value="10" step="1" min="1" max="36">
         <label for="formula">Formula</label>
         <select id="formula" name="formula">
-          <option value="brzycki">Brzycki formula</option>
           <option value="epley">Epley formula</option>
+          <option value="brzycki">Brzycki formula</option>
         </select>
+        <label for="results">Results</label>
+        <div id="results"></div>
       </div>
-      <table>
-      </table>
     </div>
   <script>
-      function typing(e) {
+    function updateRm() {
+      const weight = parseFloat($weight.val().toString().replace(',', '.'));
+      const reps = parseFloat($reps.val().toString().replace(',', '.'));
+      const invalid = [weight, reps].filter(x => !x || isNaN(x) || x < 0).length;
+      const unit = $unit.val();
+      const formula = $formula.val();
+      $results.html(([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]).map(rm => {
+        return `<div class="result">${rm}RM ${invalid ? '-' : commafy(round(calcXRm(rm), 1)) + ' ' + unit}</div>`;
+      }).join(''));
+      function calcXRm(rm) {
+        if (formula === 'epley') {
+          return weight * (1 + (reps / 30)) / (1 + (rm / 30));
+        } else {
+          return weight / (1.0278 - .0278 * reps) * (1.0278 - .0278 * rm);
+        }
+      }
+    }
+    function typing(e) {
         e.target.setAttribute('size', e.target.value.length);
       }
-
-      const myInput = document.querySelector('input');
-      myInput.addEventListener('input', typing);
-
       function commafy(number) {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
@@ -43,40 +56,21 @@
         const factor = Math.pow(10, decimalPlaces);
         return Math.round(number * factor) / factor;
       }
-
+      const myInput = document.querySelector('input');
+      myInput.addEventListener('input', typing);
       const $rmCalculator = $('div.rm-calculator');
       if ($rmCalculator.length) {
-        const $weight = $rmCalculator.find('input[name=weight]');
-        const $reps = $rmCalculator.find('input[name=reps]');
-        const $unit = $rmCalculator.find('select[name=unit]');
-        const $formula = $rmCalculator.find('select[name=formula]');
-        const $type = $rmCalculator.find('select[name=type]');
-        const $table = $rmCalculator.find('table');
+        var $weight = $rmCalculator.find('input[name=weight]');
+        var $reps = $rmCalculator.find('input[name=reps]');
+        var $unit = $rmCalculator.find('select[name=unit]');
+        var $formula = $rmCalculator.find('select[name=formula]');
+        var $results = $rmCalculator.find('div[id=results]');
         updateRm();
         $weight.on('keyup change', updateRm);
         $reps.on('keyup change', updateRm);
         $unit.on('change', updateRm);
         $formula.on('change', updateRm);
-        $type.on('change', updateRm);
-
-        function updateRm() {
-          const weight = parseFloat($weight.val().toString().replace(',', '.'));
-          const reps = parseFloat($reps.val().toString().replace(',', '.'));
-          const invalid = [weight, reps].filter(x => !x || isNaN(x) || x < 0).length;
-          const unit = $unit.val();
-          const formula = $formula.val();
-          $table.html(([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]).map(rm => {
-              return `<tr><td>${rm}RM</td><td>=</td><td>${invalid ? '-' : commafy(round(calcXRm(rm), 1)) + ' ' + unit}</td></tr>`;
-            }).join(''));
-          function calcXRm(rm) {
-            if (formula === 'epley') {
-              return weight * (1 + (reps / 30)) / (1 + (rm / 30));
-            } else {
-              return weight / (1.0278 - .0278 * reps) * (1.0278 - .0278 * rm);
-            }
-          }
-        }
       }
-    </script>
+  </script>
   </body>
 </html>
